@@ -13,6 +13,8 @@ $btnBuscar.addEventListener("click", (e) => {
   // evitamos el funcionamiento por defecto del evento
   e.preventDefault();
 
+  $table.innerHTML = "";
+
   if ($entry.value === "") {
     window.alert("Ingrese una llave a buscar");
     return;
@@ -81,7 +83,7 @@ $btnBuscar.addEventListener("click", (e) => {
             `">`;
         }
         // insertar boton guardado
-        $html += `<input type="submit" value="Guardar" class="btn btn-primary"></form>`;
+        $html += `<input type="submit" value="Guardar" class="btn btn-primary save-data"></form>`;
         $tdbutton.innerHTML = $html;
         $tr.appendChild($tdbutton);
 
@@ -90,6 +92,7 @@ $btnBuscar.addEventListener("click", (e) => {
       $table.appendChild($fragment);
     } catch (error) {
       // controlamos nuestros errores
+      console.log(error);
       window.alert("Se produjo un error insepesado");
     }
     console.log("add articulos");
@@ -102,15 +105,15 @@ $btnBuscar.addEventListener("click", (e) => {
 function getCleanDataByArticle(data) {
   keys = Object.keys(data);
   return {
-    authors: data.author.join(", "),
-    title: data.title[0],
-    pub: data.pub,
-    url: "url",
-    bibcode: data.bibcode,
-    doi: data.doi[0],
-    page_range: data.page_range,
-    volume: data.volume,
-    year: data.year,
+    authors: data.author ? data.author.join(", "): "",
+    title: data.title?data.title[0]: "",
+    pub: data.pub ? data.pub: "",
+    url: "url"? "url": "" ,
+    bibcode: data.bibcode? data.bibcode : "" ,
+    doi: data.doi[0] ? data.doi[0]: "" ,
+    page_range: data.page_range? data.page_range: "",
+    volume: data.volume? data.volume: "",
+    year: data.year? data.year: "",
   };
 }
 
@@ -156,3 +159,25 @@ async function addSaveEvent() {
   }
   console.log("add evento");
 }
+
+
+/* 
+
+FUNCIONAMIENTO DE GUARDADO DE TODOS LOS DATOS
+
+*/
+
+
+const $saveAll = document.getElementById("save-all");
+
+$saveAll.addEventListener("click", (e)=>{
+  console.log("hola");
+  const $formularios = document.getElementsByClassName("save-data");
+  for (const item in $formularios) {
+    try {
+      $formularios[item].click();
+    } catch (error) {
+      //pass
+    }
+  }
+})

@@ -1,5 +1,28 @@
-main{
+.content{
     max-width: 90vw;
     margin-left: auto;
     margin-right: auto;
+}
+
+.header{
+    margin-bottom: 3rem;
+}
+
+img{
+    object-fit: cover;
+}
+th{
+    height: 10px !important;
+    background-color: white;
+}
+.main-table-body{
+    
+    border-collapse: collapse;
+}
+
+.save-all-button{
+    display: block;
+    text-align: right;
+    margin-top: 3rem;
+    margin-bottom: 2rem;
 }

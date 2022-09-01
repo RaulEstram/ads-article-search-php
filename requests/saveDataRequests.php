@@ -4,16 +4,19 @@
     require_once '../libs/database.php';
 
     try {
+        $pages = explode("-", $_POST['page_range']);
+        $fpage = $pages[0];
+        $lpage = $pages[1];
         $data = array(
-            "authors" => $_POST['authors'],
-            "title" => $_POST['title'],
-            "pub" => $_POST['pub'],
-            "bibcode" => $_POST['bibcode'], 
-            "doi" => $_POST['doi'],
-            "fpage" => $_POST['page_range'],
-            "lpage" => $_POST['page_range'],
-            "volume" => $_POST['volume'],
-            "year" => $_POST['year'],
+            "authors" => $_POST['authors'] != "" ? $_POST['authors'] : NULL,
+            "title" => $_POST['title'] != "" ? $_POST['title'] : NULL,
+            "pub" => $_POST['pub'] != "" ? $_POST['pub'] : NULL,
+            "bibcode" => $_POST['bibcode'] != "" ? $_POST['bibcode'] : NULL, 
+            "doi" => $_POST['doi'] != "" ? $_POST['doi'] : NULL,
+            "fpage" => $fpage != "" and $fpage != NULL ? $fpage : NULL,
+            "lpage" => $fpage != "" and $fpage != NULL ? $lpage : NULL,
+            "volume" => $_POST['volume'] != "" ? $_POST['volume'] : NULL,
+            "year" => $_POST['year'] != "" ? $_POST['year'] : NULL,
         );
         // TODO: cambiar array para que quede con el query
         try {
