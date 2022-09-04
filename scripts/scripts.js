@@ -28,38 +28,24 @@ $btnBuscar.addEventListener("click", async (e) => {
     return;
   }
 
-  // Opciones de la petición (valores por defecto)
-  const options = {
-    method: "GET",
-    headers: {
-      Origin: "*",
-      Authorization: "Bearer TnEWAPDi8n5R3taijqXleJDTZ5LNDr2LMJjOOsec",
-    },
-  };
-
   // endpoint
-  let url =
-    "https://aqueous-tundra-22060.herokuapp.com/https://api.adsabs.harvard.edu/v1/search/query?q=" +
-    $entry.value +
-    "&rows=200&fl=author,title,pub,bibcode,doi,volume,year,page_range,links_data&sort=date desc";
+  let url = "https://ads-rest-api.herokuapp.com/search/" + $entry.value
 
   // funcion async que realizara la peticion HTTPs
   async function getData() {
     try {
       // realizamos la peticion con fetch
-      let response = await fetch(url, options),
+      let response = await fetch(url),
         data = await response.json();
       // comprobamos que la peticion se realizo correctamente
       if (!response.ok) {
         throw { status: response.status, statusText: response.statusText };
       }
-
+      console.log(data);
       // proceso de insertar los datos obtenidos al html
       $fragment = document.createDocumentFragment();
 
-      const clean_data = getCleanDataWithAllArticles(data);
-
-      for (const element in clean_data) {
+      for (const element in data) {
         $tr = document.createElement("tr");
 
         $index = document.createElement("td");
@@ -69,9 +55,9 @@ $btnBuscar.addEventListener("click", async (e) => {
         $tdbutton = document.createElement("td");
         $html = '<form class="save-element">';
 
-        for (const key in clean_data[element]) {
+        for (const key in data[element]) {
           $td = document.createElement("td");
-          $td.textContent = String(clean_data[element][key]).replaceAll(
+          $td.textContent = String(data[element][key]).replaceAll(
             '"',
             "'"
           );
@@ -81,7 +67,7 @@ $btnBuscar.addEventListener("click", async (e) => {
             `<input type="hidden" name="` +
             key +
             `" value="` +
-            clean_data[element][key] +
+            data[element][key] +
             `">`;
         }
         // insertar boton guardado
@@ -95,6 +81,7 @@ $btnBuscar.addEventListener("click", async (e) => {
       $table.appendChild($fragment);
     } catch (error) {
       // controlamos nuestros errores
+      console.log(error);
       window.alert("Se produjo un error insepesado");
     }
     addSaveEvent();
@@ -103,32 +90,7 @@ $btnBuscar.addEventListener("click", async (e) => {
   getData();
 });
 
-// definimos las funciones que se necesitan para acomodar la informacion
-function getCleanDataByArticle(data) {
-  keys = Object.keys(data);
-  return {
-    authors: data.author ? data.author.join(", ") : "",
-    title: data.title ? data.title[0] : "",
-    pub: data.pub ? data.pub : "",
-    url: "url" ? "url" : "",
-    bibcode: data.bibcode ? data.bibcode : "",
-    doi: data.doi[0] ? data.doi[0] : "",
-    page_range: data.page_range ? data.page_range : "",
-    volume: data.volume ? data.volume : "",
-    year: data.year ? data.year : "",
-  };
-}
 
-function getCleanDataWithAllArticles(data) {
-  const full_data = {};
-  count = 1;
-  data.response.docs.forEach((element) => {
-    const element_data = getCleanDataByArticle(element);
-    full_data[count] = element_data;
-    count += 1;
-  });
-  return full_data;
-}
 
 /* 
 
