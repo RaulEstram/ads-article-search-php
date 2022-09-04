@@ -1,28 +1,51 @@
-.content{
+.content {
     max-width: 90vw;
     margin-left: auto;
     margin-right: auto;
 }
 
-.header{
+.header {
     margin-bottom: 3rem;
 }
 
-img{
+img {
     object-fit: cover;
 }
-th{
+
+th {
     height: 10px !important;
     background-color: white;
 }
-.main-table-body{
-    
+
+.main-table-body {
+
     border-collapse: collapse;
 }
 
-.save-all-button{
+.save-all-button {
     display: block;
     text-align: right;
     margin-top: 3rem;
     margin-bottom: 2rem;
+}
+
+.fixed {
+    position: fixed;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.fix-message {
+    top: 5%;
+    z-index: 99999;
+}
+
+#message {
+    display: flex;
+    justify-content: center;
+}
+
+.centrar-alert {
+    width: 85vw;
 }

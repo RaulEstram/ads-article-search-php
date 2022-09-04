@@ -25,7 +25,7 @@
             try {
                 $insertQuery = $cursor->prepare("INSERT INTO `DatosADS` (`autores`, `title`, `pub`, `bibcode`, `doi`, `fpage`, `lpage`, `volumen`, `year`) VALUES (:authors , :title, :pub , :bibcode, :doi, :fpage, :lpage, :volume, :year)");
                 $insertQuery->execute($data);
-                echo json_encode(array("message" => "exito insert" , "data" => array($data))); // TODO: cambiar mensaje
+                echo json_encode(array("message" => "Se guardo correctamente " . $data['title'] , "ok" => TRUE)); // TODO: cambiar mensaje
             } catch (\Throwable $th) {
                 try {
                     $idQuery = $cursor->prepare("SELECT `id` FROM `DatosADS` WHERE bibcode = :bibcode and doi = :doi;");
@@ -36,16 +36,16 @@
                     $updateQuery = $cursor->prepare("UPDATE `DatosADS` SET `autores` = :authors, `title` = :title, `pub` = :pub, `bibcode` = :bibcode, `doi` = :doi, `fpage` = :fpage, `lpage` = :lpage, `volumen` = :volume, `year` = :year WHERE `DatosADS`.`id` = :id");
                     $data['id'] = $idArticle;
                     $updateQuery->execute($data);
-                    echo json_encode(array("message" => "update", "id" => $idArticle, "data" => $data )); // TODO: cambiar mensaje
+                    echo json_encode(array("message" => "Se actualizo correctamente: ". $data['title']  , "ok" => TRUE, "no-Insert" => $th)); // TODO: cambiar mensaje
                 } catch (\Throwable $th) {
-                    echo json_encode(array("message" => "error guardar articulo" )); // TODO: cambiar mensaje
+                    echo json_encode(array("message" => "Se produjo un error al guardar." , "ok" => FALSE)); // TODO: cambiar mensaje
                 }
             }
         } catch (\Throwable $th) {
-            echo json_encode(array("message" => "error en la base de datos" )); // TODO: cambiar mensaje
+            echo json_encode(array("message" => "Se produjo un error con la base de datos" , "ok" => FALSE)); // TODO: cambiar mensaje
         }
     } catch (\Throwable $th) {
-        echo json_encode(array( "message" => "Se produjo un error inesperado")); // TODO: cambiar mensaje
+        echo json_encode(array( "message" => "Se produjo un error inesperado" , "ok" => FALSE)); // TODO: cambiar mensaje
     }
     
     

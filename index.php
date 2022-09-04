@@ -5,8 +5,9 @@
 
     $id = $_POST['id'];
 ?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8" />
@@ -22,7 +23,8 @@
     <nav class="navbar navbar-dark bg-dark header">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="./assets/transparent_logo.svg" alt="ads logo" width="30" height="24" class="d-inline-block align-text-top">
+                <img src="./assets/transparent_logo.svg" alt="ads logo" width="30" height="24"
+                    class="d-inline-block align-text-top" />
                 Busques de articulos del ADS
             </a>
         </div>
@@ -38,10 +40,11 @@
                 </div>
             </form>
         </div>
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-  <strong>Holy guacamole!</strong> You should check in on some of those fields below.
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
+        
+        <div id="message">
+            
+        </div>
+        
 
         <div class="table-responsive">
             <table class="table table-striped">
@@ -49,33 +52,36 @@
                 <thead class="table-dark">
                     <tr class="table-dark">
                         <th scope="col">#</th>
-                        <th scope="col">Autores </th>
-                        <th scope="col">Titulo </th>
-                        <th scope="col">PUB </th>
-                        <th scope="col">URL </th>
-                        <th scope="col">BIBCODE </th>
-                        <th scope="col">DOI </th>
-                        <th scope="col">Paginas </th>
-                        <th scope="col">Volumen </th>
-                        <th scope="col">Año </th>
-                        <th scope="col">Guardar </th>
+                        <th scope="col">Autores</th>
+                        <th scope="col">Titulo</th>
+                        <th scope="col">PUB</th>
+                        <th scope="col">URL</th>
+                        <th scope="col">BIBCODE</th>
+                        <th scope="col">DOI</th>
+                        <th scope="col">Paginas</th>
+                        <th scope="col">Volumen</th>
+                        <th scope="col">Año</th>
+                        <th scope="col">Guardar</th>
                     </tr>
                 </thead>
-                <tbody id="main-table-body">
-                </tbody>
+                <tbody id="main-table-body"></tbody>
             </table>
         </div>
     </main>
-<div class="content save-all-button">
-    
-        <button type="button" class="btn btn-success" id="save-all">Guardar todos los articulos</button>
+    <div class="content save-all-button">
+        <button type="button" class="btn btn-success" id="save-all">
+            Guardar todos los articulos
+        </button>
+    </div>
 
-</div>
-
+    <script>
+        const id = "<?php echo $id ?>";
+    </script>
     <script src="./scripts/scripts.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
-</body>
+    </body>
+    
+    </html> 
 
-</html>
