@@ -11,8 +11,47 @@ const $alert = document.getElementById("alert"),
   $btnBuscar = document.getElementById("btnBuscar"),
   $tableBody = document.getElementById("main-table-body"),
   $entry = document.getElementById("entry"),
-  $message = document.getElementById("message");
+  $message = document.getElementById("message"),
+  $saveButton = document.getElementById("ok-modal");
 let dataArticles = {};
+
+/*
+
+FUNCIONES PARA MOSTRAR MENSAJES Y ERRORES
+
+*/
+
+function showMessage(text) {
+  $alert.innerHTML =
+    `<div class="alert alert-success alert-dismissible fade show align-items-center fixed fix-message centrar-alert" role="alert">
+    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
+      <use xlink:href="#check-circle-fill" />
+    </svg>
+    <strong>Exito: </strong> ` +
+    text +
+    `
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>`;
+  setTimeout(() => {
+    $alert.innerHTML = "";
+  }, 5000);
+}
+
+function showError(error) {
+  $alert.innerHTML =
+    `<div class="alert alert-danger alert-dismissible fade show align-items-center fixed fix-message centrar-alert" role="alert">
+    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+    <use xlink:href="#exclamation-triangle-fill"/>
+    </svg>
+    <strong>Error: </strong> ` +
+    error +
+    `
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>`;
+  setTimeout(() => {
+    $alert.innerHTML = "";
+  }, 5000);
+}
 
 /*
 
@@ -33,7 +72,7 @@ window.addEventListener("load", (e) => {
         $alert.innerHTML = ` <div class="alert alert-danger" role="alert"> <h4 class="alert-heading"> <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"> <use xlink:href="#exclamation-triangle-fill" /> </svg> Hay un error :( </h4> <p> Para que el contenido de esta página sea visible deberías de acceder desde un usuario válido o desde la página oficial. </p> <hr /> <p class="mb-0"> Prueba a ingresar a la pagina desde <a href="https://www.google.com/">aquí</a> </p> </div>`;
       }
     } catch (error) {
-      console.log(error);
+      showError("Error para Autenticar usuario.");
     }
   }
 
@@ -53,18 +92,19 @@ $btnBuscar.addEventListener("click", async (e) => {
   e.preventDefault();
 
   if ($entry.value === "") {
-    window.alert("Ingrese una llave a buscar");
+    showError("Ingrese una llave a buscar");
     return;
   }
 
   if ($entry.value.length < 4) {
-    window.alert("La llave a buscar tiene que ser de minimo 4 caracteres");
+    showError("La llave a buscar tiene que ser de minimo 4 caracteres");
     return;
   }
 
   // funcion async que realizara la peticion HTTPs
   async function getData() {
     try {
+      $tableBody.innerHTML = "";
       $loadtable.innerHTML = `<div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>`;
       // realizamos la peticion con fetch
       let response = await fetch(endpoint + "/search/" + $entry.value),
@@ -111,7 +151,7 @@ $btnBuscar.addEventListener("click", async (e) => {
           <th>` +
           article.year +
           `</th>
-          <th><button type="button" class="btn btn-primary save-button-table" data-id=` +
+          <th><button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn btn-primary save-button-table" data-id=` +
           element +
           `>Guardar</button></th>`;
         $fragment.appendChild($tr);
@@ -119,9 +159,8 @@ $btnBuscar.addEventListener("click", async (e) => {
       $loadtable.innerHTML = ``;
       $tableBody.appendChild($fragment);
       dataArticles = data.data;
-      console.log(dataArticles);
     } catch (error) {
-      window.alert("Se produjo un error insepesado: " + error.message);
+      showError("Se produjo un error insepesado: " + error.message);
     }
   }
   getData();
@@ -133,46 +172,125 @@ Realizar peticion para guardar Datos
 
 */
 
-document.body.addEventListener("click", (e) => {
-  async function saveData() {
-    try {
-      // comprobar si el usuario tiene el articulo
-
-      let data = await post(endpoint + "/userarticle", { user_id: 319, bibcode: "prueba" })
-      console.log(data);
-    } catch (error) {
-      pri;
-    }
+document.body.addEventListener("click", async (e) => {
+  // accion si se da click en boton de guardar un articulo
+  if (e.target.matches(".save-button-table")) {
+    let id_art = e.target.dataset.id;
+    $saveButton.dataset.id = id_art;
+    document.getElementById("text-modal").innerHTML =
+      `Esta seguro que quiere Guardar el articulo: <br><br>` +
+      dataArticles[id_art].title +
+      `<br><br> Si ya lo tiene registrado se actualizara con la informacion que esta en esta pagina, se lo contrario solamente se guardara.`;
+    $saveButton.classList.add("save-article");
   }
 
-  saveData();
+  // accion si se da click en boton de guardar todos los articulo
+  if (e.target.matches("#save-all")) {
+    $saveButton.dataset.id = id;
+    $saveButton.dataset.all = true;
+    document.getElementById("text-modal").innerHTML =
+      "Esta Seguro que quiere guardar Todos los articulos que aparecen?<br><br>Los articulos que ya tenga registrados se actualizaran con la informacion que esta en esta pagina, de lo contrario solamente se guardara, por lo que se recomienda guardarlos uno por uno.";
+    $saveButton.classList.add("save-all-articles");
+  }
+
+  // acction por si se salen del modal
+  if (e.target.matches(".cancel-button")) {
+    removeData();
+  }
+
+  // accion para guardar un solo articulo
+  if (e.target.matches(".save-article")) {
+    saveArticle(e.target.dataset.id);
+    removeData();
+  }
+  // accion para guardar todos los articulos
+  if (e.target.matches(".save-all-articles")) {
+    saveAllArticles();
+    removeData();
+  }
 });
 
-async function post(url, body) {
-  let response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    }),
-    data = await response.json();
-  return data;
+async function request(url, body, update = false) {
+  try {
+    let method = "POST";
+    if (update) {
+      method = "PUT";
+    }
+
+    let response = await fetch(url, {
+        method: method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      }),
+      data = await response.json();
+    return data;
+  } catch (error) {
+    throw { message: "Error al realizar la peticion." };
+  }
 }
 
-/* 
+function removeData() {
+  $saveButton.classList.remove("save-article");
+  $saveButton.classList.remove("save-all-articles");
+  $saveButton.removeAttribute("data-all");
+  $saveButton.removeAttribute("data-id");
+}
 
-FUNCIONAMIENTO DE GUARDADO DE TODOS LOS DATOS
+async function saveArticle(id_art) {
+  try {
+    let data = await request(endpoint + "/userarticle", {
+      user_id: id,
+      bibcode: dataArticles[id_art].bibcode,
+    });
 
-*/
+    const url = endpoint + "/article";
+    const body = structuredClone(dataArticles[id_art]);
+    body.user_id = id;
+    let response;
 
-const $saveAll = document.getElementById("save-all");
-
-$saveAll.addEventListener("click", async (e) => {
-  const $formularios = document.getElementsByClassName("save-data");
-  for (const item in $formularios) {
-    try {
-      $formularios[item].click();
-    } catch (error) {}
+    if (!data.status) {
+      response = await request(url, body);
+    } else {
+      body.update = true;
+      response = await request(url, body, (update = true));
+    }
+    if (response.status) {
+      showMessage(response.message);
+    } else {
+      showError(
+        "Se produjo un error al guardar el articulo, puede ser que tenga un caracter especial invalido, prueba a guardar el articulo manualmente"
+      );
+    }
+  } catch (error) {
+    showError("Error al Guardar el articulo");
   }
-});
+}
+
+async function saveAllArticles() {
+  try {
+    const url = endpoint + "/articles";
+    const body = {
+      data: structuredClone(dataArticles),
+      user_id: id,
+    };
+    const data = await request(url, body);
+
+    if (data.status) {
+      showMessage(
+        "Se Insertaron " +
+          data.inserts +
+          " Articulos, Se actualizaron " +
+          data.updates +
+          " Articulos y se produjeron " +
+          data.errors +
+          " Errores"
+      );
+    } else {
+      showError(data.error);
+    }
+  } catch (error) {
+    showError("Error al Guardar Todos los articulos.");
+  }
+}

@@ -41,7 +41,7 @@ th {
     z-index: 99999;
 }
 
-#message {
+#alert {
     display: flex;
     justify-content: center;
 }
