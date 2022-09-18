@@ -10,8 +10,10 @@
     <h1>Pagina Original</h1>
 
     <form action="index.php" method="post">
-        <input type="hidden" name="id" value="1">
+        <input type="hidden" name="id" value="319">
         <input type="submit" value="Cargar">
     </form>
+
+    
 </body>
 </html>
