@@ -69,10 +69,11 @@ window.addEventListener("load", (e) => {
         $main.classList.remove("hidden-content");
       } else {
         $main.innerHTML = ``;
-        $alert.innerHTML = ` <div class="alert alert-danger" role="alert"> <h4 class="alert-heading"> <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"> <use xlink:href="#exclamation-triangle-fill" /> </svg> Hay un error :( </h4> <p> Para que el contenido de esta página sea visible deberías de acceder desde un usuario válido o desde la página oficial. </p> <hr /> <p class="mb-0"> Prueba a ingresar a la pagina desde <a href="https://www.google.com/">aquí</a> </p> </div>`;
+        $alert.innerHTML = ` <div class="alert alert-danger" role="alert"> <h4 class="alert-heading"> <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"> <use xlink:href="#exclamation-triangle-fill" /> </svg> Hay un error :( </h4> <p> Para que el contenido de esta página sea visible deberías de acceder desde un usuario válido o desde la página oficial. </p> <hr /> <p class="mb-0"> Prueba a ingresar a la página desde <a href="https://www.google.com/">aquí</a> </p> </div>`;
       }
     } catch (error) {
-      showError("Error para Autenticar usuario.");
+      $main.innerHTML = ``;
+      $alert.innerHTML = ` <div class="alert alert-danger" role="alert"> <h4 class="alert-heading"> <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"> <use xlink:href="#exclamation-triangle-fill" /> </svg> Hay un error :( </h4> <p> Es posible que los servicios no se encuentren disponibles en estos momentos. </p> <hr /> <p class="mb-0"> Prueba a ingresar a la página desde <a href="https://www.google.com/">aquí</a> </p> </div>`;
     }
   }
 
@@ -92,12 +93,12 @@ $btnBuscar.addEventListener("click", async (e) => {
   e.preventDefault();
 
   if ($entry.value === "") {
-    showError("Ingrese una llave a buscar");
+    showError("Ingrese una llave a buscar.");
     return;
   }
 
   if ($entry.value.length < 4) {
-    showError("La llave a buscar tiene que ser de minimo 4 caracteres");
+    showError("La llave a buscar tiene que ser de mínimo 4 caracteres.");
     return;
   }
 
@@ -111,7 +112,7 @@ $btnBuscar.addEventListener("click", async (e) => {
         data = await response.json();
       // comprobamos que la peticion se realizo correctamente
       if (!data["status"]) {
-        throw { message: "Error al realizar la busqueda" };
+        throw { message: "Error al realizar la búsqueda" };
       }
 
       $fragment = document.createDocumentFragment();
@@ -160,7 +161,7 @@ $btnBuscar.addEventListener("click", async (e) => {
       $tableBody.appendChild($fragment);
       dataArticles = data.data;
     } catch (error) {
-      showError("Se produjo un error insepesado: " + error.message);
+      showError("Se produjo un error inesperado: " + error.message);
     }
   }
   getData();
@@ -178,9 +179,9 @@ document.body.addEventListener("click", async (e) => {
     let id_art = e.target.dataset.id;
     $saveButton.dataset.id = id_art;
     document.getElementById("text-modal").innerHTML =
-      `Esta seguro que quiere Guardar el articulo: <br><br>` +
+      `Está seguro que quiere Guardar el artículo: <br><br>` +
       dataArticles[id_art].title +
-      `<br><br> Si ya lo tiene registrado se actualizara con la informacion que esta en esta pagina, se lo contrario solamente se guardara.`;
+      `<br><br>Si ya lo tiene registrado se actualizará con la información que está en esta página, de lo contrario se guardara.`;
     $saveButton.classList.add("save-article");
   }
 
@@ -189,7 +190,7 @@ document.body.addEventListener("click", async (e) => {
     $saveButton.dataset.id = id;
     $saveButton.dataset.all = true;
     document.getElementById("text-modal").innerHTML =
-      "Esta Seguro que quiere guardar Todos los articulos que aparecen?<br><br>Los articulos que ya tenga registrados se actualizaran con la informacion que esta en esta pagina, de lo contrario solamente se guardara, por lo que se recomienda guardarlos uno por uno.";
+      "¿Está Seguro que quiere guardar todos los artículos que aparecen?<br><br>Los artículos que ya tenga registrados se actualizaran con la información que aparece en esta página, de lo contrario se guardara, por lo que se recomienda guardarlos uno por uno.";
     $saveButton.classList.add("save-all-articles");
   }
 
@@ -227,7 +228,7 @@ async function request(url, body, update = false) {
       data = await response.json();
     return data;
   } catch (error) {
-    throw { message: "Error al realizar la peticion." };
+    throw { message: "Error al realizar la petición." };
   }
 }
 
@@ -260,11 +261,11 @@ async function saveArticle(id_art) {
       showMessage(response.message);
     } else {
       showError(
-        "Se produjo un error al guardar el articulo, puede ser que tenga un caracter especial invalido, prueba a guardar el articulo manualmente"
+        "Se produjo un error al guardar el artículo, puede ser que tenga un carácter especial inválido, prueba a guardar el artículo manualmente."
       );
     }
   } catch (error) {
-    showError("Error al Guardar el articulo");
+    showError("Error al Guardar el artículo.");
   }
 }
 
@@ -281,16 +282,16 @@ async function saveAllArticles() {
       showMessage(
         "Se Insertaron " +
           data.inserts +
-          " Articulos, Se actualizaron " +
+          " Artículos, Se actualizaron " +
           data.updates +
-          " Articulos y se produjeron " +
+          " Artículos y se produjeron " +
           data.errors +
-          " Errores"
+          " Errores."
       );
     } else {
       showError(data.error);
     }
   } catch (error) {
-    showError("Error al Guardar Todos los articulos.");
+    showError("Error al guardar todos los Artículos.");
   }
 }
