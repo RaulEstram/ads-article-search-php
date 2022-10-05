@@ -4,7 +4,7 @@
 
 */
 
-const endpoint = "http://127.0.0.1:8080";
+const endpoint = "http://127.0.0.1:3161";
 const $alert = document.getElementById("alert"),
   $main = document.getElementById("main"),
   $loadtable = document.getElementById("loadtable"),
@@ -73,7 +73,7 @@ window.addEventListener("load", (e) => {
       }
     } catch (error) {
       $main.innerHTML = ``;
-      $alert.innerHTML = ` <div class="alert alert-danger" role="alert"> <h4 class="alert-heading"> <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"> <use xlink:href="#exclamation-triangle-fill" /> </svg> Hay un error :( </h4> <p> Es posible que los servicios no se encuentren disponibles en estos momentos. </p> <hr /> <p class="mb-0"> Prueba a ingresar a la página desde <a href="https://www.google.com/">aquí</a> </p> </div>`;
+      $alert.innerHTML = ` <div class="alert alert-danger" role="alert"> <h4 class="alert-heading"> <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"> <use xlink:href="#exclamation-triangle-fill" /> </svg> Hay un error :( </h4> <p> Es posible que los servicios ADS no se encuentren disponibles en estos momentos. </p> <hr /> <p class="mb-0"> Prueba a ingresar a la página desde <a href="https://www.google.com/">aquí</a> </p> </div>`;
     }
   }
 
@@ -110,6 +110,7 @@ $btnBuscar.addEventListener("click", async (e) => {
       // realizamos la peticion con fetch
       let response = await fetch(endpoint + "/search/" + $entry.value),
         data = await response.json();
+        console.log(data);
       // comprobamos que la peticion se realizo correctamente
       if (!data["status"]) {
         throw { message: "Error al realizar la búsqueda" };
